@@ -15,4 +15,8 @@ public class ClientService {
     public List<Client> getAllClients() { return clientRepository.findAll(); }
 
     public Client saveClient(Client client) { return clientRepository.save(client); }
+
+    public Client findById(Long id) { return clientRepository.findById(id).orElseThrow(); }
+
+    public void delete(Long id) { clientRepository.deleteById(id); }
 }
