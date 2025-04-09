@@ -1,12 +1,12 @@
-package com.jureczko.take.dto;
+package com.jureczko.take.dto.ingredient;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
 @Data
 @AllArgsConstructor
-public class DishDto {
+public class IngredientResponse {
     public Long id;
     public String name;
-    public Double price;
+    public int stockStatus;
 }
