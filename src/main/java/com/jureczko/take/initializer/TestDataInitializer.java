@@ -53,27 +53,27 @@ public class TestDataInitializer {
 
             margherita.setRecipe(List.of(
                     createRecipe(margherita, tomato, 2, "pcs"),
-                    createRecipe(margherita, cheese, 100, "g"),
+                    createRecipe(margherita, cheese, 0.1, "kg"),
                     createRecipe(margherita, dough, 1, "piece")
             ));
 
             capricciosa.setRecipe(List.of(
                     createRecipe(capricciosa, tomato, 2, "pcs"),
-                    createRecipe(capricciosa, cheese, 100, "g"),
+                    createRecipe(capricciosa, cheese, 0.1, "kg"),
                     createRecipe(capricciosa, dough, 1, "piece"),
-                    createRecipe(capricciosa, ham, 80, "g"),
-                    createRecipe(capricciosa, mushroom, 60, "g")
+                    createRecipe(capricciosa, ham, 0.08, "kg"),
+                    createRecipe(capricciosa, mushroom, 0.06, "kg")
             ));
 
             funghi.setRecipe(List.of(
                     createRecipe(funghi, tomato, 2, "pcs"),
-                    createRecipe(funghi, cheese, 80, "g"),
+                    createRecipe(funghi, cheese, 0.08, "kg"),
                     createRecipe(funghi, dough, 1, "piece"),
-                    createRecipe(funghi, mushroom, 100, "g")
+                    createRecipe(funghi, mushroom, 0.1, "kg")
             ));
 
             quatroFormaggi.setRecipe(List.of(
-                    createRecipe(quatroFormaggi, cheese, 150, "g"),
+                    createRecipe(quatroFormaggi, cheese, 0.15, "kg"),
                     createRecipe(quatroFormaggi, dough, 1, "piece"),
                     createRecipe(quatroFormaggi, tomato, 1, "pcs")
             ));
@@ -81,9 +81,9 @@ public class TestDataInitializer {
             veggi.setRecipe(List.of(
                     createRecipe(veggi, dough, 1, "piece"),
                     createRecipe(veggi, tomato, 2, "pcs"),
-                    createRecipe(veggi, mushroom, 50, "g"),
-                    createRecipe(veggi, olives, 30, "g"),
-                    createRecipe(veggi, cheese, 50, "g")
+                    createRecipe(veggi, mushroom, 0.05, "kg"),
+                    createRecipe(veggi, olives, 0.03, "kg"),
+                    createRecipe(veggi, cheese, 0.05, "kg")
             ));
 
             dishRepository.saveAll(List.of(margherita, capricciosa, funghi, quatroFormaggi, veggi));
@@ -138,7 +138,7 @@ public class TestDataInitializer {
         return dish;
     }
 
-    private Recipe createRecipe(Dish dish, Ingredient ingredient, int quantity, String unit) {
+    private Recipe createRecipe(Dish dish, Ingredient ingredient, double quantity, String unit) {
         Recipe recipe = new Recipe();
         recipe.setDish(dish);
         recipe.setIngredient(ingredient);

@@ -17,7 +17,7 @@ public class Ingredient {
 
     @Column(nullable = false)
     private String name;
-    private int stockStatus;
+    private Double stockStatus;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL)//, orphanRemoval = true)
     private List<Recipe> recipe = new ArrayList<>();
