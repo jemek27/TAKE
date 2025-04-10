@@ -10,8 +10,6 @@ import com.jureczko.take.service.ClientService;
 import com.jureczko.take.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,7 +30,7 @@ public class ClientController {
     public ResponseEntity<List<ClientResponse>> getAllClients() {
         return ResponseEntity.ok(
                 clientService.getAllClients().stream()
-                        .map(clientMapper::toDto)
+                        .map(ClientResponse::new)
                         .collect(Collectors.toList())
         );
     }
@@ -40,7 +38,7 @@ public class ClientController {
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponse> getClientById(@PathVariable Long id) {
         Client client = clientService.getClientById(id);
-        return ResponseEntity.ok(clientMapper.toDto(client));
+        return ResponseEntity.ok(new ClientResponse(client));
     }
 
     @GetMapping("/{id}/orders")
@@ -55,7 +53,7 @@ public class ClientController {
     public ResponseEntity<?> createClient(@Valid @RequestBody ClientRequest clientRequest) {
         Client client = clientMapper.toEntity(clientRequest);
         Client savedClient = clientService.saveClient(client);
-        return ResponseEntity.ok(clientMapper.toDto(savedClient));
+        return ResponseEntity.ok(new ClientResponse(savedClient));
     }
 
     @PutMapping("/{id}")
@@ -66,7 +64,7 @@ public class ClientController {
         Client client = clientMapper.toEntity(clientRequest);
         client.setId(id);
         Client updatedClient = clientService.saveClient(client);
-        return ResponseEntity.ok(clientMapper.toDto(updatedClient));
+        return ResponseEntity.ok(new ClientResponse(updatedClient));
     }
 
     @DeleteMapping("/{id}")

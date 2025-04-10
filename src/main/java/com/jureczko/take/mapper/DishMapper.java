@@ -8,5 +8,5 @@ import org.springframework.stereotype.Component;
 @Mapper(componentModel = "spring")
 public interface DishMapper {
     Dish toEntity(DishRequest dto);
-    DishResponse toDto(Dish dish);
+    //DishResponse toDto(Dish dish);
 }

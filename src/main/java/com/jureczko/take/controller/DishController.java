@@ -1,7 +1,6 @@
 package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.dish.*;
-import com.jureczko.take.dto.order.OrderResponse;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.DishMapper;
 import com.jureczko.take.model.Dish;
@@ -9,7 +8,6 @@ import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.service.DishService;
 import com.jureczko.take.service.IngredientService;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -30,7 +28,7 @@ public class DishController {
     public ResponseEntity<List<DishResponse>> getAllDishes() {
         return ResponseEntity.ok(
                 dishService.getAllDishes().stream()
-                        .map(dishMapper::toDto)
+                        .map(DishResponse::new)
                         .collect(Collectors.toList())
         );
     }
@@ -38,7 +36,7 @@ public class DishController {
     @GetMapping("/{id}")
     public ResponseEntity<DishResponse> getDishById(@PathVariable Long id) {
         Dish dish = dishService.getDishById(id);
-        return ResponseEntity.ok(dishMapper.toDto(dish));
+        return ResponseEntity.ok(new DishResponse(dish));
     }
 
     @GetMapping("/{id}/ingredients")
@@ -54,7 +52,7 @@ public class DishController {
     public ResponseEntity<List<DishResponse>> getAvailableDishes() {
         return ResponseEntity.ok(
                 dishService.getAvailableDishes().stream()
-                        .map(dishMapper::toDto)
+                        .map(DishResponse::new)
                         .collect(Collectors.toList())
         );
     }
@@ -63,7 +61,7 @@ public class DishController {
     public ResponseEntity<DishResponse> createDish(@Valid @RequestBody DishRequest dishRequest) {
         Dish dish = dishMapper.toEntity(dishRequest);
         Dish savedDish = dishService.saveDish(dish);
-        return ResponseEntity.ok(dishMapper.toDto(savedDish));
+        return ResponseEntity.ok(new DishResponse(savedDish));
     }
 
     @PutMapping("/{id}")
@@ -74,7 +72,7 @@ public class DishController {
         Dish dish = dishMapper.toEntity(dishRequest);
         dish.setId(id);
         Dish savedDish = dishService.saveDish(dish);
-        return ResponseEntity.ok(dishMapper.toDto(savedDish));
+        return ResponseEntity.ok(new DishResponse(savedDish));
     }
 
     @DeleteMapping("/{id}")
