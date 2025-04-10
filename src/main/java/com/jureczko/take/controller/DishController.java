@@ -1,11 +1,15 @@
 package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.dish.*;
+import com.jureczko.take.dto.order.OrderResponse;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.DishMapper;
 import com.jureczko.take.model.Dish;
+import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.service.DishService;
+import com.jureczko.take.service.IngredientService;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,6 +24,7 @@ import java.util.stream.Collectors;
 public class DishController {
     private final DishService dishService;
     private final DishMapper dishMapper;
+    private final IngredientService ingredientService;
 
     @GetMapping
     public ResponseEntity<List<DishResponse>> getAllDishes() {
@@ -34,6 +39,24 @@ public class DishController {
     public ResponseEntity<DishResponse> getDishById(@PathVariable Long id) {
         Dish dish = dishService.getDishById(id);
         return ResponseEntity.ok(dishMapper.toDto(dish));
+    }
+
+    @GetMapping("/{id}/ingredients")
+    public ResponseEntity<List<String>> getIngredientsOfDishById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                ingredientService.getIngredientsByDishId(id).stream()
+                        .map(Ingredient::getName)
+                        .collect(Collectors.toList())
+        );
+    }
+
+    @GetMapping("/available")
+    public ResponseEntity<List<DishResponse>> getAvailableDishes() {
+        return ResponseEntity.ok(
+                dishService.getAvailableDishes().stream()
+                        .map(dishMapper::toDto)
+                        .collect(Collectors.toList())
+        );
     }
 
     @PostMapping
