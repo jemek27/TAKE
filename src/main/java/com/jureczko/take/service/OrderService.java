@@ -1,6 +1,7 @@
 package com.jureczko.take.service;
 
-import com.jureczko.take.dto.order.OrderRequest;
+
+import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.model.Order;
 import com.jureczko.take.model.Client;
 import com.jureczko.take.model.OrderDish;
@@ -18,10 +19,18 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ClientRepository clientRepository;
 
+    public List<Order> getAllOrders() {
+        return orderRepository.findAll();
+    }
+
+    public Order getOrderById(Long id) {
+        return orderRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Order with ID " + id + " not found"));
+    }
+
     @Transactional
     public Order saveOrder(Order order) {
         Client client = clientRepository.findById(order.getClient().getId())
-                .orElseThrow(() -> new RuntimeException("Client not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Order with clientID " + order.getClient().getId() + " not found"));
 
         order.setClient(client);
 
@@ -34,19 +43,12 @@ public class OrderService {
         return orderRepository.save(order);
     }
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
-    }
-
-    public Order getOrderById(Long id) {
-        return orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
-    }
-
     public void deleteOrder(Long id) {
-        if (orderRepository.existsById(id)) {
-            orderRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Order not found");
-        }
+        Order order = getOrderById(id);
+        orderRepository.delete(order);
+    }
+
+    public boolean existsById(Long id) {
+        return orderRepository.existsById(id);
     }
 }

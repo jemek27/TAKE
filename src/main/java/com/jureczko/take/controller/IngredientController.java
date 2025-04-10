@@ -1,9 +1,12 @@
 package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.ingredient.*;
+import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.IngredientMapper;
 import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.service.IngredientService;
+import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,12 +23,14 @@ import org.springframework.web.bind.annotation.RestController;
 public class IngredientController {
     private final IngredientService ingredientService;
     private final IngredientMapper ingredientMapper;
+
     @GetMapping
-    public List<IngredientResponse> getAllIngredients() {
-        List<Ingredient> ingredients = ingredientService.getAllIngredients();
-        return ingredients.stream()
-                .map(ingredientMapper::toDto)
-                .toList();
+    public ResponseEntity<List<IngredientResponse>> getAllIngredients() {
+        return ResponseEntity.ok(
+                ingredientService.getAllIngredients().stream()
+                        .map(ingredientMapper::toDto)
+                        .toList()
+        );
     }
 
     @GetMapping("/{id}")
@@ -35,14 +40,17 @@ public class IngredientController {
     }
 
     @PostMapping
-    public ResponseEntity<IngredientResponse> createIngredient(@RequestBody IngredientRequest ingredientRequest) {
+    public ResponseEntity<IngredientResponse> createIngredient(@Valid @RequestBody IngredientRequest ingredientRequest) {
         Ingredient ingredient = ingredientMapper.toEntity(ingredientRequest);
         Ingredient savedIngredient = ingredientService.saveIngredient(ingredient);
-        return ResponseEntity.status(201).body(ingredientMapper.toDto(savedIngredient));
+        return ResponseEntity.status(HttpStatus.CREATED).body(ingredientMapper.toDto(savedIngredient));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<IngredientResponse> updateIngredient(@PathVariable Long id, @RequestBody IngredientRequest ingredientRequest) {;
+    public ResponseEntity<IngredientResponse> updateIngredient(@PathVariable Long id, @Valid @RequestBody IngredientRequest ingredientRequest) {
+        if (!ingredientService.existsById(id)) {
+            throw new ResourceNotFoundException("Ingredient with ID " + id + " not found");
+        }
         Ingredient ingredient = ingredientMapper.toEntity(ingredientRequest);
         ingredient.setId(id);
         Ingredient savedIngredient = ingredientService.saveIngredient(ingredient);

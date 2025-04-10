@@ -1,9 +1,11 @@
 package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.dish.*;
+import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.DishMapper;
 import com.jureczko.take.model.Dish;
 import com.jureczko.take.service.DishService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,13 +21,6 @@ public class DishController {
     private final DishService dishService;
     private final DishMapper dishMapper;
 
-    @PostMapping
-    public ResponseEntity<DishResponse> createDish(@RequestBody DishRequest dishRequest) {
-        Dish dish = dishMapper.toEntity(dishRequest);
-        Dish savedDish = dishService.saveDish(dish);
-        return ResponseEntity.ok(dishMapper.toDto(savedDish));
-    }
-
     @GetMapping
     public ResponseEntity<List<DishResponse>> getAllDishes() {
         return ResponseEntity.ok(
@@ -37,14 +32,22 @@ public class DishController {
 
     @GetMapping("/{id}")
     public ResponseEntity<DishResponse> getDishById(@PathVariable Long id) {
-        return dishService.getDishById(id)
-                .map(dishMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Dish dish = dishService.getDishById(id);
+        return ResponseEntity.ok(dishMapper.toDto(dish));
+    }
+
+    @PostMapping
+    public ResponseEntity<DishResponse> createDish(@Valid @RequestBody DishRequest dishRequest) {
+        Dish dish = dishMapper.toEntity(dishRequest);
+        Dish savedDish = dishService.saveDish(dish);
+        return ResponseEntity.ok(dishMapper.toDto(savedDish));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<DishResponse> updateDish(@PathVariable Long id, @RequestBody DishRequest dishRequest) {
+    public ResponseEntity<DishResponse> updateDish(@PathVariable Long id, @Valid @RequestBody DishRequest dishRequest) {
+        if (!dishService.existsById(id)) {
+            throw new ResourceNotFoundException("Dish with ID " + id + " not found");
+        }
         Dish dish = dishMapper.toEntity(dishRequest);
         dish.setId(id);
         Dish savedDish = dishService.saveDish(dish);

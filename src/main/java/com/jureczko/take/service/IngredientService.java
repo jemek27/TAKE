@@ -1,6 +1,6 @@
 package com.jureczko.take.service;
 
-import com.jureczko.take.dto.ingredient.IngredientRequest;
+import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.repository.IngredientRepository;
 import lombok.RequiredArgsConstructor;
@@ -12,12 +12,13 @@ import java.util.List;
 @RequiredArgsConstructor
 public class IngredientService {
     private final IngredientRepository ingredientRepository;
+
     public List<Ingredient> getAllIngredients() {
         return ingredientRepository.findAll();
     }
 
     public Ingredient getIngredientById(Long id) {
-        return ingredientRepository.findById(id).orElseThrow(() -> new RuntimeException("Ingredient not found"));
+        return ingredientRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Ingredient with ID " + id + " not found"));
     }
 
     public Ingredient saveIngredient(Ingredient ingredient) {
@@ -25,10 +26,11 @@ public class IngredientService {
     }
 
     public void deleteIngredient(Long id) {
-        if (ingredientRepository.existsById(id)) {
-            ingredientRepository.deleteById(id);
-        } else {
-            throw new RuntimeException("Ingredient not found");
-        }
+        Ingredient ingredient = getIngredientById(id);
+        ingredientRepository.delete(ingredient);
+    }
+
+    public boolean existsById(Long id) {
+        return ingredientRepository.existsById(id);
     }
 }
