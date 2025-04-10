@@ -124,7 +124,7 @@ public class TestDataInitializer {
         return order;
     }
 
-    private Ingredient createIngredient(String name, int stockStatus) {
+    private Ingredient createIngredient(String name, double stockStatus) {
         Ingredient ingredient = new Ingredient();
         ingredient.setName(name);
         ingredient.setStockStatus(stockStatus);
