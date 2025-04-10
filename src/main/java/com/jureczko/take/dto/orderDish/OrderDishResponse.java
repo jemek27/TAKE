@@ -1,4 +1,4 @@
-package com.jureczko.take.dto;
+package com.jureczko.take.dto.orderDish;
 
 import com.jureczko.take.model.OrderDish;
 import lombok.AllArgsConstructor;
@@ -8,12 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDishRequest {
+public class OrderDishResponse {
     private Long dishId;
+    private String name;
     private int quantity;
 
-    public OrderDishRequest(OrderDish orderDish) {
+    public OrderDishResponse(OrderDish orderDish) {
         this.dishId = orderDish.getDish().getId();
+        this.name = orderDish.getDish().getName();
         this.quantity = orderDish.getQuantity();
     }
 }

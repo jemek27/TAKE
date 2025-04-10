@@ -1,6 +1,6 @@
 package com.jureczko.take.mapper;
 
-import com.jureczko.take.dto.OrderDishRequest;
+import com.jureczko.take.dto.orderDish.*;
 import com.jureczko.take.dto.order.*;
 import com.jureczko.take.model.Client;
 import com.jureczko.take.model.Dish;
@@ -77,7 +77,7 @@ public class OrderMapperImpl implements OrderMapper {
         orderResponse.setClientId(order.getClient().getId());
         orderResponse.setOrderDateTime(order.getOrderDateTime());
         orderResponse.setTotalPrice(order.getTotalPrice());
-        orderResponse.setDishes(order.getOrderDish().stream().map(OrderDishRequest::new).collect(Collectors.toList()));
+        orderResponse.setDishes(order.getOrderDish().stream().map(OrderDishResponse::new).collect(Collectors.toList()));
         return orderResponse;
     }
 }

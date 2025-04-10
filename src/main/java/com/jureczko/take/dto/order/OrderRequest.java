@@ -1,6 +1,6 @@
 package com.jureczko.take.dto.order;
 
-import com.jureczko.take.dto.OrderDishRequest;
+import com.jureczko.take.dto.orderDish.OrderDishRequest;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;

@@ -1,10 +1,13 @@
 package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.client.*;
+import com.jureczko.take.dto.order.OrderResponse;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.ClientMapper;
+import com.jureczko.take.mapper.OrderMapper;
 import com.jureczko.take.model.Client;
 import com.jureczko.take.service.ClientService;
+import com.jureczko.take.service.OrderService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -21,7 +24,9 @@ import java.util.stream.Collectors;
 @RequestMapping("/clients")
 public class ClientController {
     private final ClientService clientService;
+    private final OrderService orderService;
     private final ClientMapper clientMapper;
+    private final OrderMapper orderMapper;
 
     @GetMapping
     public ResponseEntity<List<ClientResponse>> getAllClients() {
@@ -36,6 +41,14 @@ public class ClientController {
     public ResponseEntity<ClientResponse> getClientById(@PathVariable Long id) {
         Client client = clientService.getClientById(id);
         return ResponseEntity.ok(clientMapper.toDto(client));
+    }
+
+    @GetMapping("/{id}/orders")
+    public ResponseEntity<List<OrderResponse>> getClientOrdersById(@PathVariable Long id) {
+        return ResponseEntity.ok(
+                orderService.getOrdersByClientId(id).stream()
+                        .map(orderMapper::toDto)
+                        .collect(Collectors.toList()));
     }
 
     @PostMapping

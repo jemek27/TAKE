@@ -1,6 +1,7 @@
 package com.jureczko.take.dto.order;
 
-import com.jureczko.take.dto.OrderDishRequest;
+
+import com.jureczko.take.dto.orderDish.OrderDishResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -14,7 +15,7 @@ import java.util.List;
 public class OrderResponse {
     public Long id;
     private Long clientId;
-    private List<OrderDishRequest> dishes;
+    private List<OrderDishResponse> dishes;
     private LocalDateTime orderDateTime;
     private Double totalPrice;
 }

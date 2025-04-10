@@ -104,7 +104,7 @@ public class TestDataInitializer {
             orders.add(createOrder(c2, capricciosa, 1));
             orders.add(createOrder(c3, quatroFormaggi, 3));
             orders.add(createOrder(c4, funghi, 1));
-            orders.add(createOrder(c5, veggi, 2));
+            orders.add(createOrder(c4, veggi, 2));
 
             orderRepository.saveAll(orders);
 
