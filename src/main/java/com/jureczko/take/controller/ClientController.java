@@ -1,9 +1,11 @@
 package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.client.*;
+import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.ClientMapper;
 import com.jureczko.take.model.Client;
 import com.jureczko.take.service.ClientService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -21,18 +23,6 @@ public class ClientController {
     private final ClientService clientService;
     private final ClientMapper clientMapper;
 
-    @PostMapping
-    public ResponseEntity<?> createClient(@RequestBody ClientRequest clientRequest) {
-        try {
-            Client client = clientMapper.toEntity(clientRequest);
-            Client savedClient = clientService.saveClient(client);
-            return ResponseEntity.ok(clientMapper.toDto(savedClient));
-        } catch (DataIntegrityViolationException e) {
-            // Obsługa sytuacji, gdy email jest już zajęty
-            return ResponseEntity.badRequest().body("Email jest już zajęty.");
-        }
-    }
-
     @GetMapping
     public ResponseEntity<List<ClientResponse>> getAllClients() {
         return ResponseEntity.ok(
@@ -44,24 +34,26 @@ public class ClientController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ClientResponse> getClientById(@PathVariable Long id) {
-        return clientService.getClientById(id)
-                .map(clientMapper::toDto)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        Client client = clientService.getClientById(id);
+        return ResponseEntity.ok(clientMapper.toDto(client));
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createClient(@Valid @RequestBody ClientRequest clientRequest) {
+        Client client = clientMapper.toEntity(clientRequest);
+        Client savedClient = clientService.saveClient(client);
+        return ResponseEntity.ok(clientMapper.toDto(savedClient));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateClient(@PathVariable Long id, @RequestBody ClientRequest clientRequest) {
-        try {
-            Client client = clientMapper.toEntity(clientRequest);
-            client.setId(id);
-            Client updatedClient = clientService.updateClient(id, client);
-            return ResponseEntity.ok(clientMapper.toDto(updatedClient));
-        } catch (DataIntegrityViolationException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email jest już zajęty.");
-        } catch (RuntimeException e) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Client not found");
+    public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody ClientRequest clientRequest) {
+        if (!clientService.existsById(id)) {
+            throw new ResourceNotFoundException("Client with ID " + id + " not found");
         }
+        Client client = clientMapper.toEntity(clientRequest);
+        client.setId(id);
+        Client updatedClient = clientService.saveClient(client);
+        return ResponseEntity.ok(clientMapper.toDto(updatedClient));
     }
 
     @DeleteMapping("/{id}")

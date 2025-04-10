@@ -1,10 +1,13 @@
 package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.order.*;
+import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.OrderMapper;
 import com.jureczko.take.model.Order;
 import com.jureczko.take.service.OrderService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,11 +22,12 @@ public class OrderController {
     private final OrderMapper orderMapper;
 
     @GetMapping
-    public List<OrderResponse> getAllOrders() {
-        List<Order> orders = orderService.getAllOrders();
-        return orders.stream()
-                .map(orderMapper::toDto)
-                .toList();
+    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+        return ResponseEntity.ok(
+                orderService.getAllOrders().stream()
+                        .map(orderMapper::toDto)
+                        .toList()
+        );
     }
 
     @GetMapping("/{id}")
@@ -33,14 +37,17 @@ public class OrderController {
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(@RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> createOrder(@Valid  @RequestBody OrderRequest orderRequest) {
         Order order = orderMapper.toEntity(orderRequest);
         Order savedOrder = orderService.saveOrder(order);
-        return ResponseEntity.status(201).body(orderMapper.toDto(savedOrder));
+        return ResponseEntity.status(HttpStatus.CREATED).body(orderMapper.toDto(savedOrder));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<OrderResponse> updateOrder(@PathVariable Long id, @RequestBody OrderRequest orderRequest) {
+    public ResponseEntity<OrderResponse> updateOrder(@Valid @PathVariable Long id, @RequestBody OrderRequest orderRequest) {
+        if (!orderService.existsById(id)) {
+            throw new ResourceNotFoundException("Order with ID " + id + " not found");
+        }
         Order order = orderMapper.toEntity(orderRequest);
         order.setId(id);
         Order updatedOrder = orderService.saveOrder(order);
