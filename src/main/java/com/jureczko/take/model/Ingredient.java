@@ -1,6 +1,5 @@
 package com.jureczko.take.model;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,7 +16,7 @@ public class Ingredient {
 
     @Column(nullable = false)
     private String name;
-    private int stockStatus;
+    private Double stockStatus;
 
     @OneToMany(mappedBy = "ingredient", cascade = CascadeType.ALL)//, orphanRemoval = true)
     private List<Recipe> recipe = new ArrayList<>();

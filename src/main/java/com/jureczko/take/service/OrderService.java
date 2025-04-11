@@ -51,4 +51,8 @@ public class OrderService {
     public boolean existsById(Long id) {
         return orderRepository.existsById(id);
     }
+
+    public List<Order> getOrdersByClientId(Long id) {
+        return orderRepository.getByClientId(id);
+    }
 }
