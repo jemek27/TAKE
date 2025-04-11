@@ -48,6 +48,15 @@ public class DishController {
         );
     }
 
+    @GetMapping("/name/{name}")
+    public ResponseEntity<List<DishResponse>> getDishesByName(@PathVariable String name) {
+        return ResponseEntity.ok(
+                dishService.getDishesByName(name).stream()
+                        .map(DishResponse::new)
+                        .collect(Collectors.toList())
+        );
+    }
+
     @GetMapping("/available")
     public ResponseEntity<List<DishResponse>> getAvailableDishes() {
         return ResponseEntity.ok(

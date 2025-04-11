@@ -39,6 +39,10 @@ public class DishService {
         return dishRepository.existsById(id);
     }
 
+    public List<Dish> getDishesByName(String name){
+        return dishRepository.findByNameContainingIgnoreCase(name);
+    }
+
     public List<Dish> getAvailableDishes() {
         return dishRepository.findAll().stream()
                 .filter(this::isDishAvailable)
