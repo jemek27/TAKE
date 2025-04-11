@@ -8,6 +8,8 @@ import com.jureczko.take.model.Recipe;
 import com.jureczko.take.repository.DishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -18,8 +20,8 @@ public class DishService {
 
     private final DishRepository dishRepository;
 
-    public List<Dish> getAllDishes() {
-        return dishRepository.findAll();
+    public Page<Dish> getAllDishes(Pageable pageable) {
+        return dishRepository.findAll(pageable);
     }
 
     public Dish getDishById(Long id) {

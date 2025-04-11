@@ -7,10 +7,19 @@ import com.jureczko.take.model.Dish;
 import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.service.DishService;
 import com.jureczko.take.service.IngredientService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,13 +32,18 @@ public class DishController {
     private final DishService dishService;
     private final DishMapper dishMapper;
     private final IngredientService ingredientService;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    private final PagedResourcesAssembler<Dish> pagedResourcesAssembler;
 
     @GetMapping
-    public ResponseEntity<List<DishResponse>> getAllDishes() {
+    @Operation(summary = "Get a paginated list of dishes")
+    public ResponseEntity<PagedModel<DishResponse>> getAllDishes(
+            @PageableDefault(size = 10, sort = "name", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
-                dishService.getAllDishes().stream()
-                        .map(DishResponse::new)
-                        .collect(Collectors.toList())
+                pagedResourcesAssembler.toModel(
+                        dishService.getAllDishes(pageable),
+                        DishResponse::new
+                )
         );
     }
 
