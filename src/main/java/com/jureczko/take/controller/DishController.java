@@ -8,8 +8,6 @@ import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.service.DishService;
 import com.jureczko.take.service.IngredientService;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;

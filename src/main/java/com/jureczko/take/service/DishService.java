@@ -2,7 +2,6 @@ package com.jureczko.take.service;
 
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.model.Dish;
-import com.jureczko.take.dto.dish.*;
 import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.model.Recipe;
 import com.jureczko.take.repository.DishRepository;

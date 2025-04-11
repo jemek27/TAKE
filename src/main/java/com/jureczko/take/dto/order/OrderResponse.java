@@ -1,6 +1,5 @@
 package com.jureczko.take.dto.order;
 
-
 import com.jureczko.take.dto.orderDish.OrderDishResponse;
 import lombok.AllArgsConstructor;
 import lombok.Data;
