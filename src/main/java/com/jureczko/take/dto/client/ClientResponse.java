@@ -2,8 +2,8 @@ package com.jureczko.take.dto.client;
 
 import com.jureczko.take.controller.ClientController;
 import com.jureczko.take.model.Client;
-import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDate;
@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+@Getter
+@Setter
 public class ClientResponse extends RepresentationModel<ClientResponse> {
     public Long id;
     public String name;
