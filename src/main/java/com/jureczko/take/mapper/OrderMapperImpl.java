@@ -77,7 +77,9 @@ public class OrderMapperImpl implements OrderMapper {
         orderResponse.setClientId(order.getClient().getId());
         orderResponse.setOrderDateTime(order.getOrderDateTime());
         orderResponse.setTotalPrice(order.getTotalPrice());
-        orderResponse.setDishes(order.getOrderDish().stream().map(OrderDishResponse::new).collect(Collectors.toList()));
+        orderResponse.setDishes(order.getOrderDish().stream()
+                                .map(OrderDishResponse::new)
+                                .collect(Collectors.toList()));
         return orderResponse;
     }
 }
