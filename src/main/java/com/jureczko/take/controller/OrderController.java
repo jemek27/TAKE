@@ -90,5 +90,12 @@ public class OrderController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
         return orderService.getAgeGroupReport(startDate, endDate);
     }
+
+    @GetMapping("/day-summary")
+    public List<DaySummaryReport> getDaySummaryReport(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        return orderService.getDaySummaryReport(startDate, endDate);
+    }
 }
 

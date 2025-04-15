@@ -39,4 +39,15 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     """, nativeQuery = true)
     List<Object[]> getAgeGroupReport(@Param("startDate") LocalDateTime startDate,
                                      @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT " +
+            "FUNCTION('DAYNAME', o.orderDateTime) AS dayOfWeek, " +
+            "COUNT(o) as count " +
+            "FROM Order o " +
+            "WHERE o.orderDateTime BETWEEN :startDate AND :endDate " +
+            "GROUP BY dayOfWeek " +
+            "ORDER BY count DESC")
+    List<Object[]> getDaySummaryReport(@Param("startDate") LocalDateTime startDate,
+                                       @Param("endDate") LocalDateTime endDate);
+
 }
