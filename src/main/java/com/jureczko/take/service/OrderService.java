@@ -1,6 +1,7 @@
 package com.jureczko.take.service;
 
 
+import com.jureczko.take.dto.order.OrderSummaryReport;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.model.Order;
 import com.jureczko.take.model.Client;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -56,5 +58,9 @@ public class OrderService {
 
     public List<Order> getOrdersByClientId(Long id) {
         return orderRepository.getByClientId(id);
+    }
+
+    public OrderSummaryReport getOrderSummary(LocalDateTime startDate, LocalDateTime endDate) {
+        return orderRepository.getOrderSummaryReport(startDate, endDate);
     }
 }
