@@ -1,15 +1,18 @@
 package com.jureczko.take.service;
 
+import com.jureczko.take.dto.dish.DishReportResponse;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.model.Dish;
 import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.model.Recipe;
 import com.jureczko.take.repository.DishRepository;
+import com.jureczko.take.repository.OrderDishRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -18,6 +21,7 @@ import java.util.stream.Collectors;
 public class DishService {
 
     private final DishRepository dishRepository;
+    private final OrderDishRepository orderDishRepository;
 
     public Page<Dish> getAllDishes(Pageable pageable) {
         return dishRepository.findAll(pageable);
@@ -62,5 +66,9 @@ public class DishService {
             }
         }
         return true;
+    }
+
+    public List<DishReportResponse> getDishReport(LocalDateTime startDate, LocalDateTime endDate) {
+        return orderDishRepository.getDishReport(startDate, endDate);
     }
 }
