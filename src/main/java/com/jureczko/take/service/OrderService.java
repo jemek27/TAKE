@@ -8,6 +8,8 @@ import com.jureczko.take.model.OrderDish;
 import com.jureczko.take.repository.ClientRepository;
 import com.jureczko.take.repository.OrderRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,8 +21,8 @@ public class OrderService {
     private final OrderRepository orderRepository;
     private final ClientRepository clientRepository;
 
-    public List<Order> getAllOrders() {
-        return orderRepository.findAll();
+    public Page<Order> getAllOrders(Pageable pageable) {
+        return orderRepository.findAll(pageable);
     }
 
     public Order getOrderById(Long id) {

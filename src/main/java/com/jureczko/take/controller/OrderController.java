@@ -1,12 +1,20 @@
 package com.jureczko.take.controller;
 
+import com.jureczko.take.dto.dish.DishResponse;
 import com.jureczko.take.dto.order.*;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.OrderMapper;
+import com.jureczko.take.model.Dish;
 import com.jureczko.take.model.Order;
 import com.jureczko.take.service.OrderService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,13 +28,18 @@ import java.util.List;
 public class OrderController {
     private final OrderService orderService;
     private final OrderMapper orderMapper;
+    @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
+    private final PagedResourcesAssembler<Order> pagedResourcesAssembler;
 
     @GetMapping
-    public ResponseEntity<List<OrderResponse>> getAllOrders() {
+    @Operation(summary = "Get a paginated list of orders")
+    public ResponseEntity<PagedModel<OrderResponse>> getAllOrders(
+            @PageableDefault(size = 10, sort = "orderDateTime", direction = Sort.Direction.ASC) Pageable pageable) {
         return ResponseEntity.ok(
-                orderService.getAllOrders().stream()
-                        .map(orderMapper::toDto)
-                        .toList()
+                pagedResourcesAssembler.toModel(
+                        orderService.getAllOrders(pageable),
+                        orderMapper::toDto
+                )
         );
     }
 
