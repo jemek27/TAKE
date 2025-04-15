@@ -1,5 +1,6 @@
 package com.jureczko.take.controller;
 
+import com.jureczko.take.dto.RecipeRequest;
 import com.jureczko.take.dto.dish.*;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.DishMapper;
@@ -7,11 +8,13 @@ import com.jureczko.take.model.Dish;
 import com.jureczko.take.model.Ingredient;
 import com.jureczko.take.service.DishService;
 import com.jureczko.take.service.IngredientService;
+import com.jureczko.take.service.RecipeService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,6 +33,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/dishes")
 public class DishController {
     private final DishService dishService;
+    private final RecipeService recipeService;
     private final DishMapper dishMapper;
     private final IngredientService ingredientService;
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
@@ -111,5 +115,15 @@ public class DishController {
 
         List<DishReportResponse> report = dishService.getDishReport(startDate, endDate);
         return ResponseEntity.ok(report);
+    }
+
+    @PostMapping("/{dishId}/recipes")
+    public ResponseEntity<String> addRecipeToDish(
+            @PathVariable Long dishId,
+            @Valid @RequestBody List<RecipeRequest> recipeRequests) {
+
+        recipeService.addRecipesToDish(dishId, recipeRequests);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body("Recipe(s) added to dish " + dishId);
     }
 }
