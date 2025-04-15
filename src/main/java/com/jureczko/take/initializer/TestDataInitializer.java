@@ -100,22 +100,28 @@ public class TestDataInitializer {
             // === ORDERS ===
             List<Order> orders = new ArrayList<>();
 
-            orders.add(createOrder(c1, margherita, 2));
-            orders.add(createOrder(c2, capricciosa, 1));
-            orders.add(createOrder(c3, quatroFormaggi, 3));
-            orders.add(createOrder(c4, funghi, 1));
-            orders.add(createOrder(c4, veggi, 2));
+            orders.add(createOrder(c1, margherita, 2, LocalDateTime.now()));
+            orders.add(createOrder(c2, capricciosa, 1, LocalDateTime.now()));
+            orders.add(createOrder(c3, quatroFormaggi, 3, LocalDateTime.now().minusDays(10)));
+            orders.add(createOrder(c4, funghi, 1, LocalDateTime.now().minusDays(10)));
+            orders.add(createOrder(c4, veggi, 2, LocalDateTime.now()));
+
+            orders.add(createOrder(c5, margherita, 2, LocalDateTime.now().minusDays(9)));
+            orders.add(createOrder(c4, capricciosa, 7, LocalDateTime.now().minusDays(8)));
+            orders.add(createOrder(c3, quatroFormaggi, 3, LocalDateTime.now().minusDays(9)));
+            orders.add(createOrder(c2, funghi, 1, LocalDateTime.now().minusDays(10)));
+            orders.add(createOrder(c1, veggi, 2, LocalDateTime.now().minusDays(12)));
 
             orderRepository.saveAll(orders);
 
-            System.out.println("✅ Baza danych została wypełniona danymi testowymi.");
+            System.out.println("~~~~The database has been filled with test data~~~~.");
         }
     }
 
-    private Order createOrder(Client client, Dish dish, int quantity) {
+    private Order createOrder(Client client, Dish dish, int quantity, LocalDateTime localDateTime) {
         Order order = new Order();
         order.setClient(client);
-        order.setOrderDateTime(LocalDateTime.now());
+        order.setOrderDateTime(localDateTime);
         order.setTotalPrice(dish.getPrice() * quantity);
 
         OrderDish orderDish = createOrderDish(order, dish, quantity);
