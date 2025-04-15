@@ -1,5 +1,6 @@
 package com.jureczko.take.controller;
 
+import com.jureczko.take.dto.AgeGroupReport;
 import com.jureczko.take.dto.dish.DishResponse;
 import com.jureczko.take.dto.order.*;
 import com.jureczko.take.exception.ResourceNotFoundException;
@@ -81,6 +82,13 @@ public class OrderController {
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
 
         return orderService.getOrderSummary(startDate, endDate);
+    }
+
+    @GetMapping("/age-groups")
+    public List<AgeGroupReport> getAgeGroupReport(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime startDate,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime endDate) {
+        return orderService.getAgeGroupReport(startDate, endDate);
     }
 }
 

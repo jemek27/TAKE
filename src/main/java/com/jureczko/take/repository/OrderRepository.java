@@ -20,4 +20,23 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE o.orderDateTime BETWEEN :startDate AND :endDate")
     OrderSummaryReport getOrderSummaryReport(@Param("startDate") LocalDateTime startDate,
                                              @Param("endDate") LocalDateTime endDate);
+
+    @Query(value = """
+    SELECT 
+        CASE 
+            WHEN TIMESTAMPDIFF(YEAR, c.birthday, CURDATE()) < 18 THEN '<18'
+            WHEN TIMESTAMPDIFF(YEAR, c.birthday, CURDATE()) BETWEEN 18 AND 25 THEN '18-25'
+            WHEN TIMESTAMPDIFF(YEAR, c.birthday, CURDATE()) BETWEEN 26 AND 35 THEN '26-35'
+            WHEN TIMESTAMPDIFF(YEAR, c.birthday, CURDATE()) BETWEEN 36 AND 50 THEN '36-50'
+            ELSE '>50'
+        END AS ageGroup,
+        COUNT(o.id) AS orderCount
+    FROM orders o
+    JOIN clients c ON o.client_id = c.id
+    WHERE o.order_date_time BETWEEN :startDate AND :endDate
+    GROUP BY ageGroup
+    ORDER BY ageGroup
+    """, nativeQuery = true)
+    List<Object[]> getAgeGroupReport(@Param("startDate") LocalDateTime startDate,
+                                     @Param("endDate") LocalDateTime endDate);
 }

@@ -1,6 +1,7 @@
 package com.jureczko.take.service;
 
 
+import com.jureczko.take.dto.AgeGroupReport;
 import com.jureczko.take.dto.order.OrderSummaryReport;
 import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.model.Order;
@@ -63,4 +64,12 @@ public class OrderService {
     public OrderSummaryReport getOrderSummary(LocalDateTime startDate, LocalDateTime endDate) {
         return orderRepository.getOrderSummaryReport(startDate, endDate);
     }
+
+    public List<AgeGroupReport> getAgeGroupReport(LocalDateTime startDate, LocalDateTime endDate) {
+        List<Object[]> rawData = orderRepository.getAgeGroupReport(startDate, endDate);
+        return rawData.stream()
+                .map(obj -> new AgeGroupReport((String) obj[0], (Long) obj[1]))
+                .toList();
+    }
+
 }
