@@ -2,7 +2,6 @@ package com.jureczko.take.controller;
 
 import com.jureczko.take.dto.client.*;
 import com.jureczko.take.dto.order.OrderResponse;
-import com.jureczko.take.exception.ResourceNotFoundException;
 import com.jureczko.take.mapper.ClientMapper;
 import com.jureczko.take.mapper.OrderMapper;
 import com.jureczko.take.model.Client;
@@ -57,13 +56,8 @@ public class ClientController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody ClientRequest clientRequest) {
-        if (!clientService.existsById(id)) {
-            throw new ResourceNotFoundException("Client with ID " + id + " not found");
-        }
-        Client client = clientMapper.toEntity(clientRequest);
-        client.setId(id);
-        Client updatedClient = clientService.saveClient(client);
+    public ResponseEntity<?> updateClient(@PathVariable Long id, @Valid @RequestBody UpdateClientRequest updateRequest) {
+        Client updatedClient = clientService.updateClient(id, updateRequest);
         return ResponseEntity.ok(new ClientResponse(updatedClient));
     }
 
