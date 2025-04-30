@@ -42,7 +42,6 @@ and Recipes, enriched with HATEOAS links for easy navigation between related res
 ---
 
 ## ERD Diagram
-Entity-Relationship Diagram illustrating how entities relate:
 ![ERD diagram](./TAKE-ERD.png "Entity-Relationship Diagram")
 
 ---
