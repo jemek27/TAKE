@@ -13,12 +13,7 @@ and Recipes, enriched with HATEOAS links for easy navigation between related res
 
 ## Functional Requirements
 
-- **Full CRUD** for all entities:
-  - `Client`
-  - `Order`
-  - `Dish`
-  - `Ingredient`
-  - `Recipe`
+- **Full CRUD** for all entities
 - **HATEOAS** – every response includes hypermedia links to related resources.
 - **Swagger Documentation** – interactive API documentation and testing.
 - **Comprehensive Error Handling** (HTTP 4xx & 5xx) via centralized `@ControllerAdvice`.
