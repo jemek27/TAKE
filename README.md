@@ -1,6 +1,6 @@
 # TAKE
 
-6th Semester Java REST API Group Project
+**"Tworzenie Aplikacji Klasy Enterprise"** (Developing Enterprise-Class Applications), 6th Semester Java REST API Group Project
 
 ---
 
